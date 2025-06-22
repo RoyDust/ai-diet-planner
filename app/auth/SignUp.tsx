@@ -1,21 +1,45 @@
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
+import { api } from "@/convex/_generated/api";
+import { auth } from "@/services/firebase";
 import Colors from "@/shared/Colors";
+import { useMutation } from "convex/react";
 import { Link } from "expo-router";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Alert, Image, Text, View } from "react-native";
 
 export default function SignUp() {
   const [nickname, setNickname] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onSignUp = () => {
-    console.log("onSignUp", nickname, username, password);
-    if (!nickname || !username || !password) {
+  const CreateNewUser = useMutation(api.User.CreateNewUser);
+
+  const onSignUp = async () => {
+    console.log("onSignUp", nickname, email, password);
+    if (!nickname || !email || !password) {
       Alert.alert("请输入昵称、用户名和密码");
       return;
     }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+        console.log("user", user);
+        if (user) {
+          const res = await CreateNewUser({
+            name: nickname,
+            email: email,
+          });
+          console.log("res", res);
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(errorMessage);
+      });
   };
 
   return (
@@ -60,11 +84,7 @@ export default function SignUp() {
           value={nickname}
           onChangeText={setNickname}
         />
-        <Input
-          placeholder="请输入用户名"
-          value={username}
-          onChangeText={setUsername}
-        />
+        <Input placeholder="请输入邮箱" value={email} onChangeText={setEmail} />
         <Input
           placeholder="请输入密码"
           password={true}

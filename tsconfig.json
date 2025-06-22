@@ -7,5 +7,5 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "types.d.ts", "shared/Colors.jsx", "convex/schema.js"]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "types.d.ts", "shared/Colors.tsx", "convex/schema.js"]
 }

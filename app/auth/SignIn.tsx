@@ -6,12 +6,12 @@ import { useState } from "react";
 import { Alert, Image, Text, View } from "react-native";
 
 export default function Signin() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const onSignin = () => {
-    console.log("onSignin", username, password);
-    if (!username || !password) {
-      Alert.alert("请输入用户名和密码");
+    console.log("onSignin", email, password);
+    if (!email || !password) {
+      Alert.alert("请输入邮箱和密码");
       return;
     }
   };
@@ -53,11 +53,7 @@ export default function Signin() {
           flexDirection: "column",
         }}
       >
-        <Input
-          placeholder="请输入用户名"
-          value={username}
-          onChangeText={setUsername}
-        />
+        <Input placeholder="请输入邮箱" value={email} onChangeText={setEmail} />
         <Input
           placeholder="请输入密码"
           password={true}
