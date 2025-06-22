@@ -1,0 +1,15 @@
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
+
+export default defineSchema({
+  Users: defineTable({
+    name: v.string(),
+    email: v.string(),
+    password: v.string(),
+    picture: v.string(),
+    subscriptionId: v.optional(v.string()),
+    credits: v.number(),
+    createdAt: v.optional(v.number()),
+    updatedAt: v.optional(v.number()),
+  }),
+});

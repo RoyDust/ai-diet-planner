@@ -11,9 +11,9 @@ export default function Index() {
       }}
     >
       <Image
-        source={require("../assets/images/bg.jpg")}
+        source={require("../assets/images/bg.png")}
         style={{
-          width: "100%",
+          // width: "100%",
           height: Dimensions.get("screen").height,
         }}
         contentFit="contain"
