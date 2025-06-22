@@ -30,7 +30,7 @@ export default function Index() {
         }}
       >
         <Image
-          source={require("../assets/images/icon.png")}
+          source={require("../assets/images/menu.png")}
           style={{
             width: 150,
             height: 150,
