@@ -9,4 +9,5 @@ export default {
   BLUE: "#0000FF",
   YELLOW: "#FFFF00",
   PRIMARY: "#8837ff",
+  SKYBLUE: "#87CEEB",
 };
