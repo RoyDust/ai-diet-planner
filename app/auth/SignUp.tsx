@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { auth } from "@/services/firebase";
 import Colors from "@/shared/Colors";
 import { useMutation } from "convex/react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useContext, useState } from "react";
 import { Alert, Image, Text, View } from "react-native";
@@ -14,6 +14,8 @@ export default function SignUp() {
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const router = useRouter();
 
   const { user, setUser } = useContext(UserContext);
 
@@ -37,12 +39,15 @@ export default function SignUp() {
           });
           console.log("res", res);
           setUser(res);
+          Alert.alert("注册成功", "请登录");
+          router.push("/auth/SignIn");
         }
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.error(errorMessage);
+        Alert.alert("注册失败", errorMessage);
       });
   };
 

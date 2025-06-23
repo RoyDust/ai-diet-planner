@@ -1,19 +1,50 @@
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
+import { UserContext } from "@/context/UserContext";
+import { api } from "@/convex/_generated/api";
+import { auth } from "@/services/firebase";
 import Colors from "@/shared/Colors";
+import { useConvex } from "convex/react";
 import { Link } from "expo-router";
-import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useContext, useState } from "react";
 import { Alert, Image, Text, View } from "react-native";
 
 export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const onSignin = () => {
+
+  // 获取convex实例
+  const convex = useConvex();
+
+  // 获取用户信息 从useContext中获取
+  const { user, setUser } = useContext(UserContext);
+
+  const onSignin = async () => {
     console.log("onSignin", email, password);
     if (!email || !password) {
       Alert.alert("请输入邮箱和密码");
       return;
     }
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log("user", user);
+        const userInfo = await convex.query(api.User.GetUserInfo, {
+          email: user.email!,
+        });
+        console.log("userInfo", userInfo);
+        setUser(userInfo);
+
+        Alert.alert("登录成功");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(errorMessage);
+        Alert.alert("登录失败", errorMessage);
+      });
   };
 
   return (
