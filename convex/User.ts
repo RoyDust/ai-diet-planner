@@ -17,9 +17,11 @@ export const CreateNewUser = mutation({
 
     if (!user) {
       const newUser = await ctx.db.insert("Users", { ...data, updatedAt: Date.now() });
-      return newUser;
+      console.log("newUser", newUser);
+
+      return { ...data, user: newUser };
     } else {
-      return user;
+      return { ...data, user };
     }
   },
 });

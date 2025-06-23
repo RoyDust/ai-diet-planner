@@ -1,18 +1,21 @@
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
+import { UserContext } from "@/context/UserContext";
 import { api } from "@/convex/_generated/api";
 import { auth } from "@/services/firebase";
 import Colors from "@/shared/Colors";
 import { useMutation } from "convex/react";
 import { Link } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Alert, Image, Text, View } from "react-native";
 
 export default function SignUp() {
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { user, setUser } = useContext(UserContext);
 
   const CreateNewUser = useMutation(api.User.CreateNewUser);
 
@@ -26,13 +29,14 @@ export default function SignUp() {
       .then(async (userCredential) => {
         // Signed up
         const user = userCredential.user;
-        console.log("user", user);
+        // console.log("user", user);
         if (user) {
           const res = await CreateNewUser({
             name: nickname,
             email: email,
           });
           console.log("res", res);
+          setUser(res);
         }
       })
       .catch((error) => {
