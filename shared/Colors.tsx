@@ -10,4 +10,5 @@ export default {
   YELLOW: "#FFFF00",
   PRIMARY: "#8837ff",
   SKYBLUE: "#87CEEB",
+  PINK: "#FF69B4",
 };

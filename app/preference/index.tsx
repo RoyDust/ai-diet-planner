@@ -1,15 +1,21 @@
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
+import { UserContext } from "@/context/UserContext";
+import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
 import {
   ArrowDown01Icon,
   ArrowUp01Icon,
   Dumbbell01Icon,
-  User02Icon,
+  FemaleSymbolIcon,
+  MaleSymbolIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import { useState } from "react";
+import { useMutation } from "convex/react";
+import { useRouter } from "expo-router";
+import { useContext, useState } from "react";
 import {
+  Alert,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -24,15 +30,24 @@ const Preference = () => {
   const [gender, setGender] = useState<"male" | "female" | null>(null);
   const [goal, setGoal] = useState<"lose" | "gain" | "muscle" | null>(null);
 
+  const UpdateUserInfo = useMutation(api.User.UpdateUserInfo);
+  const { user, setUser } = useContext(UserContext);
+
+  const router = useRouter();
+
   // 性别选项数据
   const genderOptions = [
     {
       value: "male" as const,
       title: "男性",
+      icon: MaleSymbolIcon,
+      color: Colors.SKYBLUE,
     },
     {
       value: "female" as const,
       title: "女性",
+      icon: FemaleSymbolIcon,
+      color: Colors.PINK,
     },
   ];
 
@@ -58,9 +73,28 @@ const Preference = () => {
     },
   ];
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     // 这里可以添加保存用户信息的逻辑
     console.log({ weight, height, gender, goal });
+    if (!weight || !height || !gender || !goal) {
+      Alert.alert("请填写完整信息");
+      return;
+    }
+
+    const updatedUser = {
+      weight: weight,
+      height: height,
+      gender: gender,
+      goal: goal,
+    };
+
+    const res = await UpdateUserInfo({
+      userId: user?._id,
+      ...updatedUser,
+    });
+    setUser((prev: any) => ({ ...prev, ...updatedUser }));
+    Alert.alert("保存成功");
+    router.push("/(tabs)/Home");
   };
 
   const isFormValid = weight && height && gender && goal;
@@ -113,11 +147,9 @@ const Preference = () => {
                 onPress={() => setGender(option.value)}
               >
                 <HugeiconsIcon
-                  icon={User02Icon}
+                  icon={option.icon}
                   size={40}
-                  color={
-                    gender === option.value ? Colors.WHITE : Colors.DARK_GRAY
-                  }
+                  color={gender === option.value ? Colors.WHITE : option.color}
                 />
                 <Text
                   style={[

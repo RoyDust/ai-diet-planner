@@ -38,3 +38,27 @@ export const GetUserInfo = query({
     return { ...user };
   },
 });
+
+// 更新用户信息
+export const UpdateUserInfo = mutation({
+  args: {
+    userId: v.id("Users"),
+    height: v.string(),
+    weight: v.string(),
+    goal: v.string(),
+    gender: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.query("Users").filter((q) => q.eq(q.field("_id"), args.userId)).first();
+    if (!user) {
+      return { error: "User not found" };
+    }
+    const updatedUser = await ctx.db.patch(user._id, {
+      height: args.height,
+      weight: args.weight,
+      goal: args.goal,
+      gender: args.gender,
+    });
+    return updatedUser
+  },
+});
