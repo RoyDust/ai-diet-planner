@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { auth } from "@/services/firebase";
 import Colors from "@/shared/Colors";
 import { useConvex } from "convex/react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useContext, useState } from "react";
 import { Alert, Image, Text, View } from "react-native";
@@ -16,6 +16,8 @@ export default function Signin() {
 
   // 获取convex实例
   const convex = useConvex();
+  // 获取路由实例
+  const router = useRouter();
 
   // 获取用户信息 从useContext中获取
   const { user, setUser } = useContext(UserContext);
@@ -38,6 +40,7 @@ export default function Signin() {
         setUser(userInfo);
 
         Alert.alert("登录成功");
+        router.push("/(tabs)/Home");
       })
       .catch((error) => {
         const errorCode = error.code;
