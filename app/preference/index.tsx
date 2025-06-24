@@ -2,7 +2,9 @@ import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
 import { UserContext } from "@/context/UserContext";
 import { api } from "@/convex/_generated/api";
+import { CalculateCaloriesAI } from "@/services/AiModel";
 import Colors from "@/shared/Colors";
+import Prompt from "@/shared/Prompt";
 import {
   ArrowDown01Icon,
   ArrowUp01Icon,
@@ -88,11 +90,23 @@ const Preference = () => {
       goal: goal,
     };
 
-    const res = await UpdateUserInfo({
-      userId: user?._id,
+    // 调用AI模型计算卡路里
+    const PROMPT =
+      JSON.stringify({
+        updatedUser,
+      }) + Prompt.CALORIES_PROMPT;
+    const AIResponse = (await CalculateCaloriesAI(PROMPT)) as any;
+    // console.log("AIResponse", AIResponse);
+    const JSONResponse = AIResponse.replace("```json", "").replace("```", "");
+    const JSONData = JSON.parse(JSONResponse);
+
+    await UpdateUserInfo({
       ...updatedUser,
+      userId: user?._id,
+      calories: JSONData.calories || 0,
+      proteins: JSONData.proteins || 0,
     });
-    setUser((prev: any) => ({ ...prev, ...updatedUser }));
+    setUser((prev: any) => ({ ...prev, ...updatedUser, ...JSONData }));
     Alert.alert("保存成功");
     router.push("/(tabs)/Home");
   };

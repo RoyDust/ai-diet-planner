@@ -47,6 +47,8 @@ export const UpdateUserInfo = mutation({
     weight: v.string(),
     goal: v.string(),
     gender: v.string(),
+    calories: v.optional(v.number()),
+    proteins: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const user = await ctx.db.query("Users").filter((q) => q.eq(q.field("_id"), args.userId)).first();
@@ -58,6 +60,8 @@ export const UpdateUserInfo = mutation({
       weight: args.weight,
       goal: args.goal,
       gender: args.gender,
+      calories: args.calories,
+      proteins: args.proteins,
     });
     return updatedUser
   },
