@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
 export const UserContext = createContext({
-  user: null,
+  user: null as any,
   setUser: (user: any) => {},
 });

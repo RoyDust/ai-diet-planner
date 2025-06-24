@@ -1,3 +1,4 @@
+import Colors from "@/shared/Colors";
 import { TextInput } from "react-native";
 
 export default function Input({
@@ -16,14 +17,26 @@ export default function Input({
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
+      placeholderTextColor={Colors.GRAY}
       secureTextEntry={password}
       style={{
         width: "100%",
-        padding: 15,
-        borderWidth: 1,
-        borderRadius: 10,
-        fontSize: 18,
-        paddingVertical: 20,
+        paddingHorizontal: 16,
+        paddingVertical: 18,
+        borderWidth: 1.5,
+        borderColor: Colors.LIGHT_GRAY,
+        borderRadius: 12,
+        fontSize: 16,
+        backgroundColor: Colors.WHITE,
+        color: Colors.BLACK,
+        shadowColor: Colors.BLACK,
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
       }}
     />
   );

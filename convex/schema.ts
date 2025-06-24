@@ -10,5 +10,9 @@ export default defineSchema({
     credits: v.number(),
     createdAt: v.optional(v.number()),
     updatedAt: v.optional(v.number()),
+    height: v.optional(v.float64()),
+    weight: v.optional(v.float64()),
+    gender: v.optional(v.string()),
+    goal: v.optional(v.string()),
   }),
 });
