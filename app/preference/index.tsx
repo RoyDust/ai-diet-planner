@@ -24,6 +24,40 @@ const Preference = () => {
   const [gender, setGender] = useState<"male" | "female" | null>(null);
   const [goal, setGoal] = useState<"lose" | "gain" | "muscle" | null>(null);
 
+  // 性别选项数据
+  const genderOptions = [
+    {
+      value: "male" as const,
+      title: "男性",
+    },
+    {
+      value: "female" as const,
+      title: "女性",
+    },
+  ];
+
+  // 目标选项数据
+  const goalOptions = [
+    {
+      value: "lose" as const,
+      icon: ArrowDown01Icon,
+      title: "减重",
+      description: "减少体重，塑造理想身材",
+    },
+    {
+      value: "gain" as const,
+      icon: ArrowUp01Icon,
+      title: "增重",
+      description: "健康增重，增强体质",
+    },
+    {
+      value: "muscle" as const,
+      icon: Dumbbell01Icon,
+      title: "增肌",
+      description: "增强肌肉质量和力量",
+    },
+  ];
+
   const handleContinue = () => {
     // 这里可以添加保存用户信息的逻辑
     console.log({ weight, height, gender, goal });
@@ -69,49 +103,32 @@ const Preference = () => {
         <View style={styles.section}>
           <Text style={styles.inputLabel}>性别</Text>
           <View style={styles.genderContainer}>
-            <TouchableOpacity
-              style={[
-                styles.genderOption,
-                gender === "male" && styles.genderOptionSelected,
-              ]}
-              onPress={() => setGender("male")}
-            >
-              <HugeiconsIcon
-                icon={User02Icon}
-                size={40}
-                color={gender === "male" ? Colors.WHITE : Colors.DARK_GRAY}
-              />
-              <Text
+            {genderOptions.map((option) => (
+              <TouchableOpacity
+                key={option.value}
                 style={[
-                  styles.genderText,
-                  gender === "male" && styles.genderTextSelected,
+                  styles.genderOption,
+                  gender === option.value && styles.genderOptionSelected,
                 ]}
+                onPress={() => setGender(option.value)}
               >
-                男性
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.genderOption,
-                gender === "female" && styles.genderOptionSelected,
-              ]}
-              onPress={() => setGender("female")}
-            >
-              <HugeiconsIcon
-                icon={User02Icon}
-                size={40}
-                color={gender === "female" ? Colors.WHITE : Colors.DARK_GRAY}
-              />
-              <Text
-                style={[
-                  styles.genderText,
-                  gender === "female" && styles.genderTextSelected,
-                ]}
-              >
-                女性
-              </Text>
-            </TouchableOpacity>
+                <HugeiconsIcon
+                  icon={User02Icon}
+                  size={40}
+                  color={
+                    gender === option.value ? Colors.WHITE : Colors.DARK_GRAY
+                  }
+                />
+                <Text
+                  style={[
+                    styles.genderText,
+                    gender === option.value && styles.genderTextSelected,
+                  ]}
+                >
+                  {option.title}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
 
@@ -119,101 +136,42 @@ const Preference = () => {
         <View style={styles.section}>
           <Text style={styles.inputLabel}>您的目标</Text>
           <View style={styles.goalContainer}>
-            <TouchableOpacity
-              style={[
-                styles.goalOption,
-                goal === "lose" && styles.goalOptionSelected,
-              ]}
-              onPress={() => setGoal("lose")}
-            >
-              <HugeiconsIcon
-                icon={ArrowDown01Icon}
-                size={28}
-                color={goal === "lose" ? Colors.WHITE : Colors.DARK_GRAY}
-              />
-              <View style={styles.goalContent}>
-                <Text
-                  style={[
-                    styles.goalTitle,
-                    goal === "lose" && styles.goalTitleSelected,
-                  ]}
-                >
-                  减重
-                </Text>
-                <Text
-                  style={[
-                    styles.goalDescription,
-                    goal === "lose" && styles.goalDescriptionSelected,
-                  ]}
-                >
-                  减少体重，塑造理想身材
-                </Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.goalOption,
-                goal === "gain" && styles.goalOptionSelected,
-              ]}
-              onPress={() => setGoal("gain")}
-            >
-              <HugeiconsIcon
-                icon={ArrowUp01Icon}
-                size={28}
-                color={goal === "gain" ? Colors.WHITE : Colors.DARK_GRAY}
-              />
-              <View style={styles.goalContent}>
-                <Text
-                  style={[
-                    styles.goalTitle,
-                    goal === "gain" && styles.goalTitleSelected,
-                  ]}
-                >
-                  增重
-                </Text>
-                <Text
-                  style={[
-                    styles.goalDescription,
-                    goal === "gain" && styles.goalDescriptionSelected,
-                  ]}
-                >
-                  健康增重，增强体质
-                </Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.goalOption,
-                goal === "muscle" && styles.goalOptionSelected,
-              ]}
-              onPress={() => setGoal("muscle")}
-            >
-              <HugeiconsIcon
-                icon={Dumbbell01Icon}
-                size={28}
-                color={goal === "muscle" ? Colors.WHITE : Colors.DARK_GRAY}
-              />
-              <View style={styles.goalContent}>
-                <Text
-                  style={[
-                    styles.goalTitle,
-                    goal === "muscle" && styles.goalTitleSelected,
-                  ]}
-                >
-                  增肌
-                </Text>
-                <Text
-                  style={[
-                    styles.goalDescription,
-                    goal === "muscle" && styles.goalDescriptionSelected,
-                  ]}
-                >
-                  增强肌肉质量和力量
-                </Text>
-              </View>
-            </TouchableOpacity>
+            {goalOptions.map((option) => (
+              <TouchableOpacity
+                key={option.value}
+                style={[
+                  styles.goalOption,
+                  goal === option.value && styles.goalOptionSelected,
+                ]}
+                onPress={() => setGoal(option.value)}
+              >
+                <HugeiconsIcon
+                  icon={option.icon}
+                  size={28}
+                  color={
+                    goal === option.value ? Colors.WHITE : Colors.DARK_GRAY
+                  }
+                />
+                <View style={styles.goalContent}>
+                  <Text
+                    style={[
+                      styles.goalTitle,
+                      goal === option.value && styles.goalTitleSelected,
+                    ]}
+                  >
+                    {option.title}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.goalDescription,
+                      goal === option.value && styles.goalDescriptionSelected,
+                    ]}
+                  >
+                    {option.description}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
 

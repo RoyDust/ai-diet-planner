@@ -25,7 +25,7 @@ export default function Index() {
       });
       console.log("user", currentUser);
       setUser(currentUser);
-      // router.push("/(tabs)/Home");
+      router.push("/(tabs)/Home");
     });
     return () => unsubscribe();
   }, []);
