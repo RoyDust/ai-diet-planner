@@ -28,7 +28,7 @@ const UserGreeting: React.FC<UserGreetingProps> = memo(
           </View>
         </View>
         <View style={styles.greetingContainer}>
-          <Text style={styles.greetingText}>你好,</Text>
+          <Text style={styles.greetingText}>你好,👋</Text>
           <Text style={styles.nameText}>{userName}</Text>
         </View>
       </View>
