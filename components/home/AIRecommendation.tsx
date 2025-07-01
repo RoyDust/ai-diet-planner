@@ -28,7 +28,7 @@ const AIRecommendation: React.FC<AIRecommendationProps> = ({
             <MaterialIcons
               name="auto-awesome"
               size={20}
-              color={Colors.WHITE}
+              color={Colors.YELLOW}
               style={styles.buttonIcon}
             />
             <Text style={styles.buttonText}>AI生成餐食</Text>
