@@ -15,6 +15,7 @@ import {
 const GenerateAiRecipe = () => {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [recipeOptions, setRecipeOptions] = useState<any[]>([]);
 
   const onGenerate = async () => {
     // Implement AI generation logic here
@@ -24,9 +25,13 @@ const GenerateAiRecipe = () => {
         "<user_instruction>",
         userInput
       );
+      console.log("prompt", prompt);
       setLoading(true);
       const response = await GenerateRecipeAI(prompt);
       console.log("response", response);
+      const extractedJson = response?.replace("```json", "").replace("```", "");
+      console.log("extractedJson", JSON.parse(extractedJson || "[]"));
+      setRecipeOptions(JSON.parse(extractedJson || "[]"));
     } catch (error) {
       console.error("Error generating recipe:", error);
     } finally {
