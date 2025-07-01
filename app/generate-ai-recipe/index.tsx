@@ -1,3 +1,4 @@
+import RecipeOptionList from "@/components/home/RecipeOptionList";
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
 import { GenerateRecipeAI } from "@/services/AiModel";
@@ -61,6 +62,10 @@ const GenerateAiRecipe = () => {
         <View style={styles.spacer} />
 
         <Button loading={loading} title="生成食谱" onPress={onGenerate} />
+
+        {recipeOptions.length > 0 && (
+          <RecipeOptionList recipeOptions={recipeOptions} />
+        )}
       </View>
     </KeyboardAvoidingView>
   );

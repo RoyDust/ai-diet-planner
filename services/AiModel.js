@@ -1,3 +1,4 @@
+import axios from "axios";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -28,4 +29,25 @@ export const GenerateRecipeAI = async (PROMPT) => {
   return completion.choices[0]?.message?.content;
 };
 
-// console.log(CalculateCalories.choices[0].message);
+// 生成食谱图片
+const BASE_URL = "https://aigurulab.tech";
+export const GenerateImage = async (prompt) => {
+  const result = await axios.post(
+    BASE_URL + "/api/generate-image",
+    {
+      width: 1024,
+      height: 1024,
+      input: prompt,
+      model: "sdxl", //'flux'
+      aspectRatio: "1:1", //Applicable to Flux model only
+    },
+    {
+      headers: {
+        "x-api-key": process.env.EXPO_PUBLIC_AIRGURU_API_KEY, // Your API Key
+        "Content-Type": "application/json", // Content Type
+      },
+    }
+  );
+  console.log(result.data.image); //Output Result: Base 64 Image
+  return result.data.image;
+};
