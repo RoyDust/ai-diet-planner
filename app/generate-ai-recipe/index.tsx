@@ -1,6 +1,8 @@
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
+import { GenerateRecipeAI } from "@/services/AiModel";
 import Colors from "@/shared/Colors";
+import Prompt from "@/shared/Prompt";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -12,10 +14,24 @@ import {
 
 const GenerateAiRecipe = () => {
   const [userInput, setUserInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const onGenerate = () => {
+  const onGenerate = async () => {
     // Implement AI generation logic here
-    console.log("Generating recipe for:", userInput);
+    try {
+      console.log("Generating recipe for:", userInput);
+      const prompt = Prompt.GENERATE_RECIPE_PROMPT.replace(
+        "<user_instruction>",
+        userInput
+      );
+      setLoading(true);
+      const response = await GenerateRecipeAI(prompt);
+      console.log("response", response);
+    } catch (error) {
+      console.error("Error generating recipe:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,7 +55,7 @@ const GenerateAiRecipe = () => {
 
         <View style={styles.spacer} />
 
-        <Button title="生成食谱" onPress={onGenerate} />
+        <Button loading={loading} title="生成食谱" onPress={onGenerate} />
       </View>
     </KeyboardAvoidingView>
   );

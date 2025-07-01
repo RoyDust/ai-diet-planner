@@ -1,7 +1,15 @@
 import Colors from "@/shared/Colors";
-import { Text, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
 
-function Button({ title, onPress }: { title: string; onPress: () => void }) {
+function Button({
+  title,
+  onPress,
+  loading,
+}: {
+  title: string;
+  onPress: () => void;
+  loading: boolean;
+}) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -15,15 +23,19 @@ function Button({ title, onPress }: { title: string; onPress: () => void }) {
         justifyContent: "center",
       }}
     >
-      <Text
-        style={{
-          color: Colors.WHITE,
-          fontSize: 20,
-          fontWeight: "bold",
-        }}
-      >
-        {title}
-      </Text>
+      {loading ? (
+        <ActivityIndicator size="small" color={Colors.WHITE} />
+      ) : (
+        <Text
+          style={{
+            color: Colors.WHITE,
+            fontSize: 20,
+            fontWeight: "bold",
+          }}
+        >
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }
