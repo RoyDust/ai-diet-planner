@@ -4,6 +4,7 @@ import { GenerateImage, GenerateRecipeAI } from "@/services/AiModel";
 import Colors from "@/shared/Colors";
 import Prompt from "@/shared/Prompt";
 import { useMutation } from "convex/react";
+import { router } from "expo-router";
 import { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import LoadingDialog from "./LoadingDialog";
@@ -46,8 +47,14 @@ const RecipeOptionList = ({ recipeOptions }: { recipeOptions: any[] }) => {
         imageUrl: aiImage,
       });
       console.log("savedRecipe", savedRecipe);
-      
       setLoading(false);
+
+      router.push({
+        pathname: "/recipe-detail",
+        params: {
+          recipeId: savedRecipe,
+        },
+      });
     } catch (error) {
       console.error("Error generating recipe:", error);
     } finally {

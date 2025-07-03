@@ -6,7 +6,7 @@ import { UserContext } from "@/context/UserContext";
 import Colors from "@/shared/Colors";
 import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -95,6 +95,12 @@ const Home = () => {
         />
 
         <AIRecommendation onGeneratePress={handleGenerateAI} />
+
+        <View style={styles.mealPlanSection}>
+          <TouchableOpacity onPress={() => router.push("/recipe-detail?recipeId=j97afqehp2g82e7tbbhvejy2n57k0ref")}>
+            <Text>跳转至食谱详情</Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.mealPlanSection}>
           <Text style={styles.sectionTitle}>今日餐食计划</Text>

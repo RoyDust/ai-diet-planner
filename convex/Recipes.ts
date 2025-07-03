@@ -1,6 +1,7 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
+// 创建食谱
 export const CreateRecipe = mutation({
   args: {
     jsonData: v.any(),
@@ -15,6 +16,17 @@ export const CreateRecipe = mutation({
       recipeName: args.recipeName,
       imageUrl: args.imageUrl,
     });
+    return recipe;
+  },
+});
+
+// 通过食谱id获取食谱
+export const GetRecipeById = query({
+  args: {
+    id: v.id("Recipes"),
+  },
+  handler: async (ctx, args) => {
+    const recipe = await ctx.db.get(args.id);
     return recipe;
   },
 });
