@@ -23,4 +23,10 @@ export default defineSchema({
     imageUrl: v.optional(v.string()),
     recipeName: v.any(),
   }),
+  MealPlan: defineTable({
+    recipeId: v.id("Recipes"),
+    date: v.string(),
+    mealType: v.string(),
+    uid: v.id("Users"),
+  }),
 });
