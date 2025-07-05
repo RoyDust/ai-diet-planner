@@ -1,3 +1,4 @@
+import AddActionSheet from "@/components/home/AddActionSheet";
 import GenerateRecipe from "@/components/home/GenerateRecipe";
 import RecipeIngredients from "@/components/home/RecipeIngredients";
 import RecipeSteps from "@/components/home/RecipeSteps";
@@ -7,21 +8,39 @@ import { Id } from "@/convex/_generated/dataModel";
 import Colors from "@/shared/Colors";
 import { useQuery } from "convex/react";
 import { useLocalSearchParams } from "expo-router/build/hooks";
+
+import { useRef } from "react";
 import { FlatList, Platform, StyleSheet, View } from "react-native";
+import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 
 const RecipeDetail = () => {
   const searchParams = useLocalSearchParams();
   const recipeId = searchParams?.recipeId;
   console.log("recipeId", recipeId); // j97afqehp2g82e7tbbhvejy2n57k0ref
 
+  const actionSheetRef = useRef<ActionSheetRef>(null);
+
   const recipeDetail = useQuery(api.Recipes.GetRecipeById, {
     id: recipeId as Id<"Recipes">,
   });
   console.log("getRecipe", recipeDetail);
 
+  // 点击加入计划
+  const handleAddToPlan = () => {
+    actionSheetRef.current?.show();
+  };
+
   // 加入计划
-  const addToPlan = () => {
-    console.log("加入计划");
+  const addToPlan = (params: {
+    selectedDate: string;
+    selectedMeal: string;
+  }) => {
+    console.log("加入计划", params);
+  };
+
+  // 取消加入计划
+  const cancelAddToPlan = () => {
+    actionSheetRef.current?.hide();
   };
 
   return (
@@ -38,8 +57,19 @@ const RecipeDetail = () => {
           <RecipeSteps recipeDetail={recipeDetail} />
           {/* 按钮 */}
           <View style={styles.buttonContainer}>
-            <Button title="加入计划" onPress={addToPlan} loading={false} />
+            <Button
+              title="加入计划"
+              onPress={handleAddToPlan}
+              loading={false}
+            />
           </View>
+
+          <ActionSheet ref={actionSheetRef}>
+            <AddActionSheet
+              cancelAddToPlan={cancelAddToPlan}
+              addToPlan={addToPlan}
+            />
+          </ActionSheet>
         </View>
       )}
     />
