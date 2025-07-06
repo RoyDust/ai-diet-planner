@@ -13,6 +13,12 @@ interface MealPlanCardProps {
   onToggleComplete?: () => void;
 }
 
+const mealTypeMap = {
+  breakfast: "早餐",
+  lunch: "午餐",
+  dinner: "晚餐",
+};
+
 const MealPlanCard: React.FC<MealPlanCardProps> = ({
   type,
   name,
@@ -45,7 +51,11 @@ const MealPlanCard: React.FC<MealPlanCardProps> = ({
 
         <View style={styles.content}>
           <View style={styles.textSection}>
-            <Text style={styles.mealType}>{type}</Text>
+            <View style={styles.mealType}>
+              <Text style={styles.mealTypeText}>
+                {mealTypeMap[type as keyof typeof mealTypeMap]}
+              </Text>
+            </View>
             <Text style={styles.mealName}>{name}</Text>
             <Text style={styles.calories}>{calories}千卡</Text>
           </View>
@@ -124,10 +134,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mealType: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.INFO,
     marginBottom: 4,
+    backgroundColor: Colors.PRIMARY_BG,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 16,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 60,
+  },
+  mealTypeText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.PRIMARY,
   },
   mealName: {
     fontSize: 14,
@@ -138,7 +158,7 @@ const styles = StyleSheet.create({
   calories: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.INFO,
+    color: Colors.TEXT_SECONDARY,
   },
   checkButton: {
     padding: 8,

@@ -1,13 +1,11 @@
 import AIRecommendation from "@/components/home/AIRecommendation";
 import GoalProgress from "@/components/home/GoalProgress";
-import TodaysMealPlan, { MealPlan } from "@/components/home/TodaysMealPlan";
+import TodaysMealPlan from "@/components/home/TodaysMealPlan";
 import UserGreeting from "@/components/home/UserGreeting";
 import { UserContext } from "@/context/UserContext";
-import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
 import { useConvex } from "convex/react";
 import { router } from "expo-router";
-import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import {
   Dimensions,
@@ -28,7 +26,7 @@ const Home = () => {
 
   const convex = useConvex();
 
-  const [mealPlans, setMealPlans] = useState<MealPlan[]>([
+  const [mealPlans, setMealPlans] = useState<any[]>([
     {
       id: "1",
       type: "早餐",
@@ -58,32 +56,6 @@ const Home = () => {
     router.push("/generate-ai-recipe");
   };
 
-  const handleMealPress = (mealId: string) => {
-    console.log("餐食被点击:", mealId);
-    // TODO: 导航到餐食详情
-  };
-
-  const handleToggleComplete = (mealId: string) => {
-    console.log("切换完成状态:", mealId);
-    setMealPlans((prevMeals) =>
-      prevMeals.map((meal) =>
-        meal.id === mealId ? { ...meal, completed: !meal.completed } : meal
-      )
-    );
-  };
-
-  // 获取当天的计划
-  const getTodaysMealPlan = async () => {
-    const date = moment(new Date()).add(1, "days").format("DD/MM/YYYY");
-    console.log("date ", date);
-    const result = await convex.query(api.Mealplan.getTodaysMealPlan, {
-      uid: user?._id,
-      date: date,
-    });
-
-    console.log("getTodaysMealPlan ", result);
-  };
-
   // 计算当前摄入的卡路里
   const currentCalories = mealPlans
     .filter((meal) => meal.completed)
@@ -91,7 +63,6 @@ const Home = () => {
 
   useEffect(() => {
     console.log(user);
-    getTodaysMealPlan();
     if (!user?.height) {
       router.replace("/preference");
     }
@@ -125,11 +96,7 @@ const Home = () => {
           </TouchableOpacity>
         </View>
 
-        <TodaysMealPlan
-          mealPlans={mealPlans}
-          onMealPress={handleMealPress}
-          onToggleComplete={handleToggleComplete}
-        />
+        <TodaysMealPlan />
 
         <View style={styles.bottomPadding} />
       </ScrollView>
