@@ -6,6 +6,7 @@ import {
   Sun03Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, IconSvgElement } from "@hugeicons/react-native";
+import moment from "moment";
 import { useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -85,45 +86,44 @@ const AddActionSheet = ({
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>选择日期</Text>
         <View style={styles.optionsRow}>
-          {dateOptions.map((option, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.dateOption,
-                selectedDate === option.date.toDateString() &&
-                  styles.selectedOption,
-              ]}
-              onPress={() => setSelectedDate(option.date.toDateString())}
-            >
-              <Text
+          {dateOptions.map((option, index) => {
+            const formattedDate = moment(option.date).format("DD/MM/YYYY");
+            return (
+              <TouchableOpacity
+                key={index}
                 style={[
-                  styles.weekdayText,
-                  selectedDate === option.date.toDateString() &&
-                    styles.selectedText,
+                  styles.dateOption,
+                  selectedDate === formattedDate && styles.selectedOption,
                 ]}
+                onPress={() => setSelectedDate(formattedDate)}
               >
-                星期{option.weekday}
-              </Text>
-              <Text
-                style={[
-                  styles.dayText,
-                  selectedDate === option.date.toDateString() &&
-                    styles.selectedText,
-                ]}
-              >
-                {option.day}号
-              </Text>
-              <Text
-                style={[
-                  styles.monthText,
-                  selectedDate === option.date.toDateString() &&
-                    styles.selectedText,
-                ]}
-              >
-                {option.month}月
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  style={[
+                    styles.weekdayText,
+                    selectedDate === formattedDate && styles.selectedText,
+                  ]}
+                >
+                  星期{option.weekday}
+                </Text>
+                <Text
+                  style={[
+                    styles.dayText,
+                    selectedDate === formattedDate && styles.selectedText,
+                  ]}
+                >
+                  {option.day}号
+                </Text>
+                <Text
+                  style={[
+                    styles.monthText,
+                    selectedDate === formattedDate && styles.selectedText,
+                  ]}
+                >
+                  {option.month}月
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
 

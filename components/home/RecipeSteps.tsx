@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     borderRadius: 15,
     padding: 10,
-    flex: 1,
   },
   stepNumber: {
     fontSize: 15,
@@ -58,6 +57,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Colors.TEXT_PRIMARY,
     lineHeight: 25,
+    flexShrink: 1,
   },
 });
 

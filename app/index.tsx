@@ -17,9 +17,8 @@ export default function Index() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (userInfo) => {
-      console.log("userInfo", userInfo);
-      console.log(userInfo?.email);
-
+      // console.log("userInfo", userInfo);
+      // console.log(userInfo?.email);
       const currentUser = await convex.query(api.User.GetUserInfo, {
         email: userInfo!.email!,
       });
@@ -96,6 +95,7 @@ export default function Index() {
         }}
       >
         <Button
+          loading={false}
           title="开始使用"
           onPress={() => {
             router.push("/auth/SignIn");

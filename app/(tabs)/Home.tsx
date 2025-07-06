@@ -1,28 +1,32 @@
 import AIRecommendation from "@/components/home/AIRecommendation";
 import GoalProgress from "@/components/home/GoalProgress";
-import MealPlanCard from "@/components/home/MealPlanCard";
+import TodaysMealPlan, { MealPlan } from "@/components/home/TodaysMealPlan";
 import UserGreeting from "@/components/home/UserGreeting";
 import { UserContext } from "@/context/UserContext";
+import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
+import { useConvex } from "convex/react";
 import { router } from "expo-router";
+import moment from "moment";
 import { useContext, useEffect, useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const isSmallScreen = screenWidth < 375;
 const isTablet = screenWidth >= 768;
 
-interface MealPlan {
-  id: string;
-  type: "早餐" | "午餐" | "晚餐";
-  name: string;
-  calories: number;
-  completed: boolean;
-}
-
 const Home = () => {
   const { user } = useContext(UserContext);
+
+  const convex = useConvex();
 
   const [mealPlans, setMealPlans] = useState<MealPlan[]>([
     {
@@ -48,13 +52,6 @@ const Home = () => {
     },
   ]);
 
-  useEffect(() => {
-    console.log(user);
-    if (!user?.height) {
-      router.replace("/preference");
-    }
-  }, [user]);
-
   const handleGenerateAI = () => {
     console.log("AI生成按钮被点击");
     // TODO: 实现AI生成逻辑
@@ -75,10 +72,30 @@ const Home = () => {
     );
   };
 
+  // 获取当天的计划
+  const getTodaysMealPlan = async () => {
+    const date = moment(new Date()).add(1, "days").format("DD/MM/YYYY");
+    console.log("date ", date);
+    const result = await convex.query(api.Mealplan.getTodaysMealPlan, {
+      uid: user?._id,
+      date: date,
+    });
+
+    console.log("getTodaysMealPlan ", result);
+  };
+
   // 计算当前摄入的卡路里
   const currentCalories = mealPlans
     .filter((meal) => meal.completed)
     .reduce((total, meal) => total + meal.calories, 0);
+
+  useEffect(() => {
+    console.log(user);
+    getTodaysMealPlan();
+    if (!user?.height) {
+      router.replace("/preference");
+    }
+  }, [user]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -96,27 +113,23 @@ const Home = () => {
 
         <AIRecommendation onGeneratePress={handleGenerateAI} />
 
-        <View style={styles.mealPlanSection}>
-          <TouchableOpacity onPress={() => router.push("/recipe-detail?recipeId=j97afqehp2g82e7tbbhvejy2n57k0ref")}>
+        <View>
+          <TouchableOpacity
+            onPress={() =>
+              router.push(
+                "/recipe-detail?recipeId=j97afqehp2g82e7tbbhvejy2n57k0ref"
+              )
+            }
+          >
             <Text>跳转至食谱详情</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.mealPlanSection}>
-          <Text style={styles.sectionTitle}>今日餐食计划</Text>
-
-          {mealPlans.map((meal) => (
-            <MealPlanCard
-              key={meal.id}
-              type={meal.type}
-              name={meal.name}
-              calories={meal.calories}
-              completed={meal.completed}
-              onPress={() => handleMealPress(meal.id)}
-              onToggleComplete={() => handleToggleComplete(meal.id)}
-            />
-          ))}
-        </View>
+        <TodaysMealPlan
+          mealPlans={mealPlans}
+          onMealPress={handleMealPress}
+          onToggleComplete={handleToggleComplete}
+        />
 
         <View style={styles.bottomPadding} />
       </ScrollView>
@@ -131,17 +144,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-  },
-  mealPlanSection: {
-    marginTop: 8,
-    paddingBottom: isTablet ? 40 : 20,
-  },
-  sectionTitle: {
-    fontSize: isSmallScreen ? 18 : 20,
-    fontWeight: "700",
-    color: Colors.TEXT_PRIMARY,
-    paddingHorizontal: isTablet ? 40 : 20,
-    marginBottom: 16,
   },
   bottomPadding: {
     height: isTablet ? 100 : 80,

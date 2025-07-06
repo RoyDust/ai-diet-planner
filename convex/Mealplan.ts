@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 export const createMealPlan = mutation({
   args: {
@@ -16,5 +16,38 @@ export const createMealPlan = mutation({
       uid: args.uid,
     });
     return mealPlan;
+  },
+});
+
+// 获取用户当天的计划
+export const getTodaysMealPlan = query({
+  args: {
+    uid: v.id("Users"),
+    date: v.any(),
+  },
+  handler: async (ctx, args) => {
+
+    console.log("args ", args);
+
+    // 获取全部计划
+    const allMealPlan = await ctx.db.query("MealPlan")
+      .filter((q) => q.and(
+        q.eq(q.field("uid"), args.uid),
+        q.eq(q.field("date"), args.date),
+      ))
+      .collect();
+
+    console.log("allMealPlan ", allMealPlan);
+
+
+    // 获取计划详情
+    const result = await Promise.all(allMealPlan.map(async (mealPlan) => {
+      const recipe = await ctx.db.get(mealPlan.recipeId);
+      return {
+        mealPlan,
+        recipe,
+      };
+    }));
+    return result;
   },
 });
