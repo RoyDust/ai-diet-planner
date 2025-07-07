@@ -3,7 +3,14 @@ import Colors from "@/shared/Colors";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface MealPlanCardProps {
   mealInfo: any;
@@ -27,13 +34,14 @@ const MealPlanCard: React.FC<MealPlanCardProps> = ({
   const updateMealPlanStatus = useMutation(api.Mealplan.updateMealPlanStatus);
 
   const onConfirm = (status: boolean) => {
-    console.log("onConfirm ", status);
-
+    // console.log("onConfirm ", status);
     updateMealPlanStatus({
       id: mealInfo.id as any,
       status: !status,
+      calories: mealInfo.calories, 
     });
     setCompleted(!status);
+    Alert.alert("提示", "已更新完成状态");
   };
 
   useEffect(() => {

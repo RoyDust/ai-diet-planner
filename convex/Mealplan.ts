@@ -57,11 +57,13 @@ export const updateMealPlanStatus = mutation({
   args: {
     id: v.id("MealPlan"),
     status: v.boolean(),
+    calories: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     console.log("updateMealPlanStatus ", args);
     const result = await ctx.db.patch(args.id, {
       status: args.status,
+      calories: args?.calories || 0,
     });
     return result;
   },

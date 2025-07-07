@@ -39,15 +39,15 @@ const TodaysMealPlan = ({}) => {
         date: date,
       });
 
-      console.log("getTodaysMealPlan ", result);
+      // console.log("getTodaysMealPlan ", result);
 
-      const mealPlans = result.map((meal) => {
+      const mealPlans = result.map((meal) => { 
         let recipeData: any = {};
         if (meal.recipe?.jsonData) {
           try {
             const data =
               typeof meal.recipe.jsonData === "string"
-                ? JSON.parse(meal.recipe.jsonData)
+                ? JSON.parse(meal.recipe.jsonData) 
                 : meal.recipe.jsonData;
             recipeData = data;
           } catch (e) {
@@ -91,11 +91,6 @@ const TodaysMealPlan = ({}) => {
         meal.id === mealId ? { ...meal, completed: !meal.completed } : meal
       )
     );
-
-    // updateMealPlanStatus({
-    //   id: mealId as any,
-    //   status: completed,
-    // });
   };
 
   const handleCreateNewPlan = () => {
