@@ -37,7 +37,7 @@ export const getTodaysMealPlan = query({
       ))
       .collect();
 
-    console.log("allMealPlan ", allMealPlan);
+    // console.log("allMealPlan ", allMealPlan);
 
 
     // 获取计划详情
@@ -51,3 +51,19 @@ export const getTodaysMealPlan = query({
     return result;
   },
 });
+
+// 更新计划状态
+export const updateMealPlanStatus = mutation({
+  args: {
+    id: v.id("MealPlan"),
+    status: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    console.log("updateMealPlanStatus ", args);
+    const result = await ctx.db.patch(args.id, {
+      status: args.status,
+    });
+    return result;
+  },
+});
+

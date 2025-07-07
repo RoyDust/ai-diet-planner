@@ -1,14 +1,12 @@
+import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
-import React from "react";
+import { useMutation } from "convex/react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface MealPlanCardProps {
-  type: "早餐" | "午餐" | "晚餐";
-  name: string;
-  calories: number;
-  image?: string;
-  completed?: boolean;
+  mealInfo: any;
   onPress?: () => void;
   onToggleComplete?: () => void;
 }
@@ -20,14 +18,28 @@ const mealTypeMap = {
 };
 
 const MealPlanCard: React.FC<MealPlanCardProps> = ({
-  type,
-  name,
-  calories,
-  image,
-  completed = false,
+  mealInfo,
   onPress,
   onToggleComplete,
 }) => {
+  const [completed, setCompleted] = useState(mealInfo.completed);
+
+  const updateMealPlanStatus = useMutation(api.Mealplan.updateMealPlanStatus);
+
+  const onConfirm = (status: boolean) => {
+    console.log("onConfirm ", status);
+
+    updateMealPlanStatus({
+      id: mealInfo.id as any,
+      status: !status,
+    });
+    setCompleted(!status);
+  };
+
+  useEffect(() => {
+    setCompleted(mealInfo.completed);
+  }, [mealInfo.completed]);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -36,8 +48,8 @@ const MealPlanCard: React.FC<MealPlanCardProps> = ({
     >
       <View style={styles.card}>
         <View style={styles.imageContainer}>
-          {image ? (
-            <Image source={{ uri: image }} style={styles.foodImage} />
+          {mealInfo.image ? (
+            <Image source={{ uri: mealInfo.image }} style={styles.foodImage} />
           ) : (
             <View style={styles.placeholderImage}>
               <MaterialIcons
@@ -53,11 +65,11 @@ const MealPlanCard: React.FC<MealPlanCardProps> = ({
           <View style={styles.textSection}>
             <View style={styles.mealType}>
               <Text style={styles.mealTypeText}>
-                {mealTypeMap[type as keyof typeof mealTypeMap]}
+                {mealTypeMap[mealInfo.type as keyof typeof mealTypeMap]}
               </Text>
             </View>
-            <Text style={styles.mealName}>{name}</Text>
-            <Text style={styles.calories}>{calories}千卡</Text>
+            <Text style={styles.mealName}>{mealInfo.name}</Text>
+            <Text style={styles.calories}>{mealInfo.calories}千卡</Text>
           </View>
 
           <TouchableOpacity
@@ -75,6 +87,7 @@ const MealPlanCard: React.FC<MealPlanCardProps> = ({
             accessibilityState={{ checked: completed }}
           >
             <FontAwesome
+              onPress={() => onConfirm(completed)}
               name={completed ? "check-square" : "square-o"}
               size={24}
               color={completed ? Colors.SUCCESS : Colors.TEXT_TERTIARY}

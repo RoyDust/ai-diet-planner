@@ -33,7 +33,7 @@ const TodaysMealPlan = ({}) => {
   const getTodaysMealPlan = async () => {
     try {
       const date = moment(new Date()).add(1, "days").format("DD/MM/YYYY");
-      // console.log("date ", date);
+      console.log("date ", date);
       const result = await convex.query(api.Mealplan.getTodaysMealPlan, {
         uid: user?._id,
         date: date,
@@ -65,7 +65,7 @@ const TodaysMealPlan = ({}) => {
           name: meal.recipe?.recipeName,
           calories: recipeData?.calories || 0,
           image: meal.recipe?.imageUrl,
-          completed: false,
+          completed: meal.mealPlan.status || false,
         };
       });
 
@@ -79,6 +79,7 @@ const TodaysMealPlan = ({}) => {
 
   const handleMealPress = (mealId: string) => {
     console.log("餐食被点击:", mealId);
+
     // TODO: 导航到餐食详情
   };
 
@@ -90,6 +91,11 @@ const TodaysMealPlan = ({}) => {
         meal.id === mealId ? { ...meal, completed: !meal.completed } : meal
       )
     );
+
+    // updateMealPlanStatus({
+    //   id: mealId as any,
+    //   status: completed,
+    // });
   };
 
   const handleCreateNewPlan = () => {
@@ -110,11 +116,7 @@ const TodaysMealPlan = ({}) => {
         mealPlans.map((meal) => (
           <MealPlanCard
             key={meal.id}
-            type={meal.type}
-            name={meal.name}
-            calories={meal.calories}
-            image={meal.image}
-            completed={meal.completed}
+            mealInfo={meal}
             onPress={() => handleMealPress(meal.id)}
             onToggleComplete={() => handleToggleComplete(meal.id)}
           />
