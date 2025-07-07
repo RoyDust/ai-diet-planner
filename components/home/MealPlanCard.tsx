@@ -1,8 +1,9 @@
+import { RefreshDataContext } from "@/context/RefreshDataContext";
 import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -30,6 +31,7 @@ const MealPlanCard: React.FC<MealPlanCardProps> = ({
   onToggleComplete,
 }) => {
   const [completed, setCompleted] = useState(mealInfo.completed);
+  const { refreshData, setRefreshData } = useContext(RefreshDataContext);
 
   const updateMealPlanStatus = useMutation(api.Mealplan.updateMealPlanStatus);
 
@@ -38,9 +40,10 @@ const MealPlanCard: React.FC<MealPlanCardProps> = ({
     updateMealPlanStatus({
       id: mealInfo.id as any,
       status: !status,
-      calories: mealInfo.calories, 
+      calories: mealInfo.calories,
     });
     setCompleted(!status);
+    setRefreshData(Date.now());
     Alert.alert("提示", "已更新完成状态");
   };
 

@@ -33,7 +33,7 @@ const TodaysMealPlan = ({}) => {
   const getTodaysMealPlan = async () => {
     try {
       const date = moment(new Date()).add(1, "days").format("DD/MM/YYYY");
-      console.log("date ", date);
+      // console.log("date ", date);
       const result = await convex.query(api.Mealplan.getTodaysMealPlan, {
         uid: user?._id,
         date: date,
@@ -41,13 +41,13 @@ const TodaysMealPlan = ({}) => {
 
       // console.log("getTodaysMealPlan ", result);
 
-      const mealPlans = result.map((meal) => { 
+      const mealPlans = result.map((meal) => {
         let recipeData: any = {};
         if (meal.recipe?.jsonData) {
           try {
             const data =
               typeof meal.recipe.jsonData === "string"
-                ? JSON.parse(meal.recipe.jsonData) 
+                ? JSON.parse(meal.recipe.jsonData)
                 : meal.recipe.jsonData;
             recipeData = data;
           } catch (e) {

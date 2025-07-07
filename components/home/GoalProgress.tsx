@@ -1,18 +1,38 @@
-import Colors from '@/shared/Colors';
-import React, { memo, useMemo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { RefreshDataContext } from "@/context/RefreshDataContext";
+import { UserContext } from "@/context/UserContext";
+import { api } from "@/convex/_generated/api";
+import Colors from "@/shared/Colors";
+import { useConvex } from "convex/react";
+import moment from "moment";
+import { memo, useContext, useEffect, useMemo, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-interface GoalProgressProps {
-  current: number;
-  target: number;
-  date?: string;
-}
+const GoalProgress = memo(() => {
+  const [current, setCurrent] = useState(0);
+  const [target, setTarget] = useState(3000);
+  const [date, setDate] = useState(
+    moment(new Date()).add(1, "days").format("DD/MM/YYYY")
+  );
 
-const GoalProgress: React.FC<GoalProgressProps> = memo(({ 
-  current = 1500, 
-  target = 2000, 
-  date = "April 16, 2025" 
-}) => {
+  const convex = useConvex();
+  const { user } = useContext(UserContext);
+  const { refreshData, setRefreshData } = useContext(RefreshDataContext);
+
+  // 获取今日的摄入量
+  const getTodaysCalories = async () => {
+    const date = moment(new Date()).add(1, "days").format("DD/MM/YYYY");
+    const result = await convex.query(api.Mealplan.getTodaysCalories, {
+      uid: user?._id,
+      date: date,
+    });
+    console.log("getTodaysCalories ", result);
+    setCurrent(result);
+  };
+
+  useEffect(() => {
+    getTodaysCalories();
+  }, [user, refreshData]);
+
   const progressData = useMemo(() => {
     const progress = Math.min(current / target, 1);
     const percentage = Math.round(progress * 100);
@@ -21,7 +41,7 @@ const GoalProgress: React.FC<GoalProgressProps> = memo(({
 
   return (
     <View style={styles.container}>
-      <View 
+      <View
         style={styles.card}
         accessible={true}
         accessibilityLabel={`今日目标: 已摄入${current}卡路里，目标${target}卡路里，完成度${progressData.percentage}%`}
@@ -31,9 +51,9 @@ const GoalProgress: React.FC<GoalProgressProps> = memo(({
           <Text style={styles.title}>今日目标</Text>
           <Text style={styles.date}>{date}</Text>
         </View>
-        
+
         <View style={styles.progressSection}>
-          <Text 
+          <Text
             style={styles.progressText}
             accessible={true}
             accessibilityLabel={`${current} 卡路里，目标 ${target} 卡路里`}
@@ -46,17 +66,17 @@ const GoalProgress: React.FC<GoalProgressProps> = memo(({
         </View>
 
         <View style={styles.progressBarContainer}>
-          <View 
+          <View
             style={styles.progressBarBackground}
             accessible={true}
             accessibilityLabel={`进度条显示完成度 ${progressData.percentage}%`}
             accessibilityRole="progressbar"
           >
-            <View 
+            <View
               style={[
-                styles.progressBarFill, 
-                { width: `${progressData.percentage}%` }
-              ]} 
+                styles.progressBarFill,
+                { width: `${progressData.percentage}%` },
+              ]}
             />
           </View>
           <View style={styles.progressInfo}>
@@ -69,7 +89,7 @@ const GoalProgress: React.FC<GoalProgressProps> = memo(({
   );
 });
 
-GoalProgress.displayName = 'GoalProgress';
+GoalProgress.displayName = "GoalProgress";
 
 const styles = StyleSheet.create({
   container: {
@@ -90,28 +110,28 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.TEXT_PRIMARY,
   },
   date: {
     fontSize: 14,
     color: Colors.TEXT_SECONDARY,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   progressSection: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 24,
   },
   progressText: {
     fontSize: 32,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.TEXT_PRIMARY,
   },
   currentText: {
@@ -126,7 +146,7 @@ const styles = StyleSheet.create({
   unitText: {
     fontSize: 18,
     color: Colors.TEXT_SECONDARY,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   progressBarContainer: {
     gap: 12,
@@ -135,28 +155,28 @@ const styles = StyleSheet.create({
     height: 8,
     backgroundColor: Colors.BORDER_LIGHT,
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressBarFill: {
-    height: '100%',
+    height: "100%",
     backgroundColor: Colors.SUCCESS,
     borderRadius: 4,
   },
   progressInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   progressLabel: {
     fontSize: 14,
     color: Colors.TEXT_SECONDARY,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   encouragement: {
     fontSize: 14,
     color: Colors.SUCCESS,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 
-export default GoalProgress; 
+export default GoalProgress;

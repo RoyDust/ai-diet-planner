@@ -76,15 +76,11 @@ const Home = () => {
       >
         <UserGreeting userName={user?.name || "用户"} />
 
-        <GoalProgress
-          current={currentCalories}
-          target={2000}
-          date="2025年4月16日"
-        />
+        <GoalProgress /> 
 
         <AIRecommendation onGeneratePress={handleGenerateAI} />
 
-        <View>
+        <View> 
           <TouchableOpacity
             onPress={() =>
               router.push(

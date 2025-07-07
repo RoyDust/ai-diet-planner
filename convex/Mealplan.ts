@@ -69,3 +69,25 @@ export const updateMealPlanStatus = mutation({
   },
 });
 
+
+// 统计用户今日的摄入量
+export const getTodaysCalories = query({
+  args: {
+    date: v.string(),
+    uid: v.id("Users"),
+  },
+  handler: async (ctx, args) => {
+    console.log("获取今日的摄入量参数 ", args);
+    const mealPlans = await ctx.db.query("MealPlan")
+      .filter((q) => q.and(
+        q.eq(q.field("uid"), args.uid),
+        q.eq(q.field("date"), args.date),
+        q.eq(q.field("status"), true),
+      ))
+      .collect();
+
+    const calories = mealPlans.reduce((acc: number, curr: any) =>
+      acc + (curr.calories || 0), 0);
+    return calories;
+  },
+});
