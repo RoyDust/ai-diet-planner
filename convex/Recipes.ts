@@ -30,3 +30,11 @@ export const GetRecipeById = query({
     return recipe;
   },
 });
+
+// 获取所有食谱
+export const GetAllRecipes = query({
+  handler: async (ctx) => {
+    const recipes = await ctx.db.query("Recipes").order("desc").collect();
+    return recipes;
+  },
+});

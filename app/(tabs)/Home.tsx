@@ -51,8 +51,6 @@ const Home = () => {
   ]);
 
   const handleGenerateAI = () => {
-    console.log("AI生成按钮被点击");
-    // TODO: 实现AI生成逻辑
     router.push("/generate-ai-recipe");
   };
 
@@ -76,11 +74,11 @@ const Home = () => {
       >
         <UserGreeting userName={user?.name || "用户"} />
 
-        <GoalProgress /> 
+        <GoalProgress />
 
         <AIRecommendation onGeneratePress={handleGenerateAI} />
 
-        <View> 
+        <View>
           <TouchableOpacity
             onPress={() =>
               router.push(
