@@ -41,6 +41,7 @@ const Meals = () => {
             contentContainerStyle={{
               paddingHorizontal: 5,
             }}
+            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             renderItem={({ item }) => <RecipeCard recipeInfo={item} />}
           />
         </View>

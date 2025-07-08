@@ -1,5 +1,6 @@
 import Colors from "@/shared/Colors";
 import { TRecipe } from "@/types";
+import { useRouter } from "expo-router";
 import { useRef } from "react";
 import {
   Animated,
@@ -33,8 +34,16 @@ const RecipeCard = ({ recipeInfo }: { recipeInfo: TRecipe }) => {
     transform: [{ scale: scaleValue }],
   };
 
+  const router = useRouter();
+
   return (
-    <Pressable onPressIn={onPressIn} onPressOut={onPressOut}>
+    <Pressable
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      onPress={() => {
+        router.push(`/recipe-detail?recipeId=${recipeInfo._id}`);
+      }}
+    >
       <Animated.View style={[styles.cardContainer, animatedStyle]}>
         <Image
           style={styles.cardImage}
