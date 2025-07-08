@@ -71,7 +71,7 @@ const RecipeCard = ({ recipeInfo }: { recipeInfo: TRecipe }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: Dimensions.get("window").width * 0.45,
+    width: Dimensions.get("window").width * 0.44,
     height: 190,
     backgroundColor: Colors.WHITE,
     margin: 8,

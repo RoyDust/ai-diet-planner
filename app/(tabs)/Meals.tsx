@@ -39,9 +39,8 @@ const Meals = () => {
             numColumns={2}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
-              paddingHorizontal: 5,
+              paddingHorizontal: 10,
             }}
-            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             renderItem={({ item }) => <RecipeCard recipeInfo={item} />}
           />
         </View>
