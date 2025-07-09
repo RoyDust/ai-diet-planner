@@ -7,9 +7,13 @@ import moment from "moment";
 import { memo, useContext, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-const GoalProgress = memo(() => {
+interface GoalProgressProps {
+  selectedDate?: string;
+}
+
+const GoalProgress = memo(({ selectedDate }: GoalProgressProps) => {
   const [current, setCurrent] = useState(0);
-  const [target, setTarget] = useState(3000);
+  const [target, setTarget] = useState(2000);
   const [date, setDate] = useState(
     moment().add(1, "days").utcOffset("+08:00").format("DD/MM/YYYY")
   );
@@ -19,19 +23,22 @@ const GoalProgress = memo(() => {
   const { refreshData, setRefreshData } = useContext(RefreshDataContext);
 
   // 获取今日的摄入量
-  const getTodaysCalories = async () => {
-    const date = moment().add(1, "days").utcOffset("+08:00").format("DD/MM/YYYY");
+  const getCaloriesForDate = async () => {
+    const dateToFetch =
+      selectedDate ||
+      moment().add(1, "days").utcOffset("+08:00").format("DD/MM/YYYY");
+    setDate(dateToFetch);
     const result = await convex.query(api.Mealplan.getTodaysCalories, {
       uid: user?._id,
-      date: date,
+      date: dateToFetch,
     });
-    console.log("getTodaysCalories ", result);
+    console.log("getCaloriesForDate ", result);
     setCurrent(result);
   };
 
   useEffect(() => {
-    getTodaysCalories();
-  }, [user, refreshData]);
+    getCaloriesForDate();
+  }, [user, refreshData, selectedDate]);
 
   const progressData = useMemo(() => {
     const progress = Math.min(current / target, 1);
@@ -39,16 +46,19 @@ const GoalProgress = memo(() => {
     return { progress, percentage };
   }, [current, target]);
 
+  const isToday =
+    date === moment().add(1, "days").utcOffset("+08:00").format("DD/MM/YYYY");
+
   return (
     <View style={styles.container}>
       <View
         style={styles.card}
         accessible={true}
-        accessibilityLabel={`今日目标: 已摄入${current}卡路里，目标${target}卡路里，完成度${progressData.percentage}%`}
+        accessibilityLabel={`目标: 已摄入${current}卡路里，目标${target}卡路里，完成度${progressData.percentage}%`}
         accessibilityRole="progressbar"
       >
         <View style={styles.header}>
-          <Text style={styles.title}>今日目标</Text>
+          <Text style={styles.title}>{isToday ? "今日目标" : "当日目标"}</Text>
           <Text style={styles.date}>{date}</Text>
         </View>
 

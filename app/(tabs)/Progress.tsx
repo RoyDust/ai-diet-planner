@@ -1,4 +1,5 @@
 import DateSelection from "@/components/home/DateSelection";
+import GoalProgress from "@/components/home/GoalProgress";
 import TodaysMealPlan from "@/components/home/TodaysMealPlan";
 import Colors from "@/shared/Colors";
 import moment from "moment";
@@ -13,7 +14,9 @@ import {
 } from "react-native";
 
 const Progress = () => {
-  const [selectedDate, setSelectedDate] = useState(moment().utcOffset("+08:00").format("DD/MM/YYYY"));
+  const [selectedDate, setSelectedDate] = useState(
+    moment().utcOffset("+08:00").format("DD/MM/YYYY")
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,6 +35,9 @@ const Progress = () => {
           </View>
           <View style={styles.planContainer}>
             <TodaysMealPlan selectedDate={selectedDate} />
+          </View>
+          <View style={styles.planContainer}>
+            <GoalProgress selectedDate={selectedDate} />
           </View>
         </View>
       </ScrollView>
