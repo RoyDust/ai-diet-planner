@@ -93,7 +93,6 @@ GoalProgress.displayName = "GoalProgress";
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
     marginBottom: 20,
   },
   card: {

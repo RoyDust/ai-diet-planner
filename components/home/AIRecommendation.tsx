@@ -48,7 +48,6 @@ const AIRecommendation: React.FC<AIRecommendationProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    paddingHorizontal: 20,
     marginBottom: 24,
   },
   card: {

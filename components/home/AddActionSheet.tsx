@@ -6,16 +6,9 @@ import {
   Sun03Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, IconSvgElement } from "@hugeicons/react-native";
-import moment from "moment";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-interface DateOption {
-  date: Date;
-  weekday: string;
-  day: number;
-  month: number;
-}
+import DateSelection from "./DateSelection";
 
 interface MealOption {
   id: "breakfast" | "lunch" | "dinner";
@@ -32,26 +25,6 @@ const AddActionSheet = ({
 }) => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedMeal, setSelectedMeal] = useState<string>("");
-
-  // 生成从今天开始的三天日期
-  const dateOptions = useMemo((): DateOption[] => {
-    const dates: DateOption[] = [];
-    const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
-
-    for (let i = 0; i < 3; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() + i + 1);
-
-      dates.push({
-        date,
-        weekday: weekdays[date.getDay()],
-        day: date.getDate(),
-        month: date.getMonth() + 1,
-      });
-    }
-
-    return dates;
-  }, []);
 
   // 饭点选项
   const mealOptions: MealOption[] = [
@@ -83,49 +56,11 @@ const AddActionSheet = ({
       <Text style={styles.title}>添加到饮食计划</Text>
 
       {/* 日期选择 */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>选择日期</Text>
-        <View style={styles.optionsRow}>
-          {dateOptions.map((option, index) => {
-            const formattedDate = moment(option.date).format("DD/MM/YYYY");
-            return (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.dateOption,
-                  selectedDate === formattedDate && styles.selectedOption,
-                ]}
-                onPress={() => setSelectedDate(formattedDate)}
-              >
-                <Text
-                  style={[
-                    styles.weekdayText,
-                    selectedDate === formattedDate && styles.selectedText,
-                  ]}
-                >
-                  星期{option.weekday}
-                </Text>
-                <Text
-                  style={[
-                    styles.dayText,
-                    selectedDate === formattedDate && styles.selectedText,
-                  ]}
-                >
-                  {option.day}号
-                </Text>
-                <Text
-                  style={[
-                    styles.monthText,
-                    selectedDate === formattedDate && styles.selectedText,
-                  ]}
-                >
-                  {option.month}月
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </View>
+      <DateSelection
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
+        days={3}
+      />
 
       {/* 饭点选择 */}
       <View style={styles.section}>
@@ -206,16 +141,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 12,
   },
-  dateOption: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    backgroundColor: Colors.BACKGROUND,
-    borderWidth: 1,
-    borderColor: Colors.BORDER,
-  },
   mealOption: {
     flex: 1,
     alignItems: "center",
@@ -229,21 +154,6 @@ const styles = StyleSheet.create({
   selectedOption: {
     backgroundColor: Colors.PRIMARY,
     borderColor: Colors.PRIMARY,
-  },
-  weekdayText: {
-    fontSize: 12,
-    color: Colors.TEXT_SECONDARY,
-    marginBottom: 4,
-  },
-  dayText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: Colors.TEXT_PRIMARY,
-    marginBottom: 2,
-  },
-  monthText: {
-    fontSize: 12,
-    color: Colors.TEXT_SECONDARY,
   },
   mealText: {
     fontSize: 16,

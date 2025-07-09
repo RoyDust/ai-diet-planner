@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
     fontSize: isSmallScreen ? 18 : 20,
     fontWeight: "700",
     color: Colors.TEXT_PRIMARY,
-    paddingHorizontal: isTablet ? 40 : 20,
     marginBottom: 16,
   },
   noPlanContainer: {
@@ -154,7 +153,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: Colors.WHITE,
     borderRadius: 12,
-    marginHorizontal: isTablet ? 40 : 20,
     marginTop: 20,
   },
   noPlanText: {

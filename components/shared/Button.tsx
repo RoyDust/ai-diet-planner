@@ -8,7 +8,7 @@ function Button({
 }: {
   title: string;
   onPress: () => void;
-  loading: boolean;
+  loading?: boolean;
 }) {
   return (
     <TouchableOpacity

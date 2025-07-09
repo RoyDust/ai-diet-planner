@@ -5,12 +5,12 @@ import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Alert,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Alert,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 interface MealPlanCardProps {
@@ -113,7 +113,6 @@ const MealPlanCard: React.FC<MealPlanCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
     marginBottom: 16,
   },
   card: {

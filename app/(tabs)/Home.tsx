@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    paddingHorizontal: 20,
   },
   bottomPadding: {
     height: isTablet ? 100 : 80,
