@@ -1,5 +1,7 @@
 import DateSelection from "@/components/home/DateSelection";
+import TodaysMealPlan from "@/components/home/TodaysMealPlan";
 import Colors from "@/shared/Colors";
+import moment from "moment";
 import { useState } from "react";
 import {
   Platform,
@@ -10,8 +12,10 @@ import {
   View,
 } from "react-native";
 
-const Profile = () => {
-  const [selectedDate, setSelectedDate] = useState("");
+const Progress = () => {
+  const [selectedDate, setSelectedDate] = useState(
+    moment().format("DD/MM/YYYY")
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,13 +32,13 @@ const Profile = () => {
               days={4}
             />
           </View>
-          {/* <View style={styles.planContainer}>
-            <TodaysMealPlan />
-          </View> */}
+          <View style={styles.planContainer}>
+            <TodaysMealPlan selectedDate={selectedDate} />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
-  ); 
+  );
 };
 
 const styles = StyleSheet.create({
@@ -61,10 +65,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   planContainer: {
-    width: "100%", 
+    width: "100%",
     display: "flex",
     flexDirection: "column",
   },
 });
 
-export default Profile;
+export default Progress;

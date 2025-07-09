@@ -2,10 +2,11 @@ import { UserContext } from "@/context/UserContext";
 import { api } from "@/convex/_generated/api";
 import Colors from "@/shared/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useConvex } from "convex/react";
+import { useQuery } from "convex/react";
 import moment from "moment";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useMemo } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   StyleSheet,
   Text,
@@ -18,96 +19,79 @@ const { width: screenWidth } = Dimensions.get("window");
 const isTablet = screenWidth >= 768;
 const isSmallScreen = screenWidth < 375;
 
-interface TodaysMealPlanProps {
-  mealPlans: any[];
-  onMealPress: (mealId: string) => void;
-  onToggleComplete: (mealId: string) => void;
-}
-
-const TodaysMealPlan = ({}) => {
-  const [mealPlans, setMealPlans] = useState<any[]>([]);
-  const convex = useConvex();
+const TodaysMealPlan = ({ selectedDate }: { selectedDate?: string }) => {
   const { user } = useContext(UserContext);
 
-  // 获取当天的计划
-  const getTodaysMealPlan = async () => {
-    try {
-      const date = moment(new Date()).add(1, "days").format("DD/MM/YYYY");
-      // console.log("date ", date);
-      const result = await convex.query(api.Mealplan.getTodaysMealPlan, {
-        uid: user?._id,
-        date: date,
-      });
+  const dateToQuery = selectedDate || moment(new Date()).format("DD/MM/YYYY");
 
-      // console.log("getTodaysMealPlan ", result);
+  const mealPlanData = useQuery(api.Mealplan.getTodaysMealPlan, {
+    uid: user?._id,
+    date: dateToQuery,
+  });
 
-      const mealPlans = result.map((meal) => {
-        let recipeData: any = {};
-        if (meal.recipe?.jsonData) {
-          try {
-            const data =
-              typeof meal.recipe.jsonData === "string"
-                ? JSON.parse(meal.recipe.jsonData)
-                : meal.recipe.jsonData;
-            recipeData = data;
-          } catch (e) {
-            console.error(
-              "Failed to process recipe jsonData:",
-              meal.recipe.jsonData,
-              e
-            );
-          }
+  const mealPlans = useMemo(() => {
+    if (!mealPlanData) return [];
+
+    return mealPlanData.map((meal) => {
+      let recipeData: any = {};
+      if (meal.recipe?.jsonData) {
+        try {
+          const data =
+            typeof meal.recipe.jsonData === "string"
+              ? JSON.parse(meal.recipe.jsonData)
+              : meal.recipe.jsonData;
+          recipeData = data;
+        } catch (e) {
+          console.error(
+            "Failed to process recipe jsonData:",
+            meal.recipe.jsonData,
+            e
+          );
         }
+      }
 
-        return {
-          id: meal.mealPlan._id,
-          type: meal.mealPlan.mealType,
-          name: meal.recipe?.recipeName,
-          calories: recipeData?.calories || 0,
-          image: meal.recipe?.imageUrl,
-          completed: meal.mealPlan.status || false,
-        };
-      });
-
-      console.log("mealPlans  ", mealPlans);
-
-      setMealPlans(mealPlans);
-    } catch (error) {
-      console.log("error ", error);
-    }
-  };
+      return {
+        id: meal.mealPlan._id,
+        type: meal.mealPlan.mealType,
+        name: meal.recipe?.recipeName,
+        calories: recipeData?.calories || 0,
+        image: meal.recipe?.imageUrl,
+        completed: meal.mealPlan.status || false,
+      };
+    });
+  }, [mealPlanData]);
 
   const handleMealPress = (mealId: string) => {
     console.log("餐食被点击:", mealId);
-
     // TODO: 导航到餐食详情
   };
 
-  // 切换完成状态
   const handleToggleComplete = (mealId: string) => {
     console.log("切换完成状态:", mealId);
-    setMealPlans((prevMeals) =>
-      prevMeals.map((meal) =>
-        meal.id === mealId ? { ...meal, completed: !meal.completed } : meal
-      )
-    );
+    // This is a temporary state update. For persistence, you'd need a mutation.
+    // setMealPlans(prevMeals => ...);
   };
 
   const handleCreateNewPlan = () => {
     // TODO: 实现创建新计划的逻辑
     console.log("创建新的饮食计划");
-    getTodaysMealPlan();
   };
 
-  useEffect(() => {
-    getTodaysMealPlan();
-  }, [user]);
+  const title = selectedDate
+    ? `${moment(selectedDate, "DD/MM/YYYY").format("M月D日")}的计划`
+    : "今日餐食计划";
 
   return (
     <View style={styles.mealPlanSection}>
-      <Text style={styles.sectionTitle}>今日餐食计划</Text>
+      <Text style={styles.sectionTitle}>{title}</Text>
 
-      {mealPlans.length > 0 ? (
+      {mealPlanData === undefined ? (
+        <ActivityIndicator
+          style={{ marginTop: 20 }}
+          size="large"
+          color={Colors.PRIMARY}
+        />
+      ) : mealPlans && mealPlans.length > 0 ? (
         mealPlans.map((meal) => (
           <MealPlanCard
             key={meal.id}
@@ -123,7 +107,7 @@ const TodaysMealPlan = ({}) => {
             size={48}
             color={Colors.TEXT_SECONDARY}
           />
-          <Text style={styles.noPlanText}>你没有制定今日的饮食计划</Text>
+          <Text style={styles.noPlanText}>你没有为这一天制定饮食计划</Text>
           <TouchableOpacity
             style={styles.createPlanButton}
             onPress={handleCreateNewPlan}

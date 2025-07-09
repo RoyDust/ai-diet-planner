@@ -131,10 +131,10 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.TEXT_PRIMARY,
-    marginBottom: 12,
+    fontSize: 18,
+    fontWeight: "700",
+    color: Colors.TEXT_PRIMARY, 
+    marginBottom: 16,
   },
   optionsRow: {
     flexDirection: "row",

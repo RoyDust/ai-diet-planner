@@ -24,7 +24,7 @@ const DateSelection = ({ selectedDate, onSelectDate, days }: Props) => {
 
     for (let i = 0; i < days; i++) {
       const date = new Date();
-      date.setDate(date.getDate() + i + 1); 
+      date.setDate(date.getDate() + i);
 
       dates.push({
         date,
