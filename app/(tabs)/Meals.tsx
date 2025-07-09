@@ -32,7 +32,10 @@ const Meals = () => {
         <View style={styles.mealPlanContainer}>
           <Text style={styles.title}>食谱菜单🥬</Text>
 
-          <AIRecommendation onGeneratePress={handleGenerateAI} />
+          <View style={styles.planContainer}>
+            <AIRecommendation onGeneratePress={handleGenerateAI} />
+          </View>
+
           <FlatList
             data={recipes}
             keyExtractor={(item) => item._id}
@@ -71,6 +74,10 @@ const styles = StyleSheet.create({
     color: Colors.TEXT_PRIMARY,
     paddingLeft: 20,
     marginBottom: 20,
+  },
+  planContainer: {
+    width: "100%",
+    paddingHorizontal: 20,
   },
 });
 
