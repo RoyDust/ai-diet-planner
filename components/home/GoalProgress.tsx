@@ -11,7 +11,7 @@ const GoalProgress = memo(() => {
   const [current, setCurrent] = useState(0);
   const [target, setTarget] = useState(3000);
   const [date, setDate] = useState(
-    moment(new Date()).add(1, "days").format("DD/MM/YYYY")
+    moment().add(1, "days").utcOffset("+08:00").format("DD/MM/YYYY")
   );
 
   const convex = useConvex();
@@ -20,7 +20,7 @@ const GoalProgress = memo(() => {
 
   // 获取今日的摄入量
   const getTodaysCalories = async () => {
-    const date = moment(new Date()).add(1, "days").format("DD/MM/YYYY");
+    const date = moment().add(1, "days").utcOffset("+08:00").format("DD/MM/YYYY");
     const result = await convex.query(api.Mealplan.getTodaysCalories, {
       uid: user?._id,
       date: date,

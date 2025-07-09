@@ -42,7 +42,7 @@ const DateSelection = ({ selectedDate, onSelectDate, days }: Props) => {
       <Text style={styles.sectionTitle}>选择日期</Text>
       <View style={styles.optionsRow}>
         {dateOptions.map((option, index) => {
-          const formattedDate = moment(option.date).format("DD/MM/YYYY");
+          const formattedDate = moment(option.date).utcOffset("+08:00").format("DD/MM/YYYY");
           return (
             <TouchableOpacity
               key={index}

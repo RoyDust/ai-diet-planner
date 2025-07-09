@@ -13,9 +13,7 @@ import {
 } from "react-native";
 
 const Progress = () => {
-  const [selectedDate, setSelectedDate] = useState(
-    moment().format("DD/MM/YYYY")
-  );
+  const [selectedDate, setSelectedDate] = useState(moment().utcOffset("+08:00").format("DD/MM/YYYY"));
 
   return (
     <SafeAreaView style={styles.container}>

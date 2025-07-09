@@ -22,7 +22,7 @@ const isSmallScreen = screenWidth < 375;
 const TodaysMealPlan = ({ selectedDate }: { selectedDate?: string }) => {
   const { user } = useContext(UserContext);
 
-  const dateToQuery = selectedDate || moment(new Date()).format("DD/MM/YYYY");
+  const dateToQuery = selectedDate || moment().utcOffset("+08:00").format("DD/MM/YYYY");
 
   const mealPlanData = useQuery(api.Mealplan.getTodaysMealPlan, {
     uid: user?._id,
@@ -78,7 +78,7 @@ const TodaysMealPlan = ({ selectedDate }: { selectedDate?: string }) => {
   };
 
   const title = selectedDate
-    ? `${moment(selectedDate, "DD/MM/YYYY").format("M月D日")}的计划`
+    ? `${moment(selectedDate, "DD/MM/YYYY").utcOffset("+08:00").format("M月D日")}的计划`
     : "今日餐食计划";
 
   return (
